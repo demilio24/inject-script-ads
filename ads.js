@@ -4,18 +4,20 @@ function getQueryParam(param) {
     return urlParams.get(param);
 }
 
-// Extract location_id and email from the URL
+// Extract location_id, email, and context from the URL
 const locationId = getQueryParam('location_id');
 const userEmail = getQueryParam('email');
+const businessContext = getQueryParam('context');
 
 console.log("Extracted location_id:", locationId);
 console.log("Extracted email:", userEmail);
+console.log("Extracted business_context:", businessContext);
 
 // Function to set the values after the form has fully loaded
 function setFieldValues() {
     let locationField = document.querySelector("input[data-q='location_id_(ghl_account_id)']");
     let emailField = document.querySelector("input[data-q='email']");
-
+    let contextField = document.querySelector("input[data-q='business_context_for_ads']");
 
     if (locationField) {
         locationField.value = locationId;
@@ -34,6 +36,16 @@ function setFieldValues() {
         console.log("✅ Successfully set email:", userEmail);
     } else {
         console.error("❌ Hidden field for email not found! Retrying...");
+        setTimeout(setFieldValues, 500); // Retry after 500ms
+    }
+
+    if (contextField) {
+        contextField.value = businessContext;
+        contextField.setAttribute("value", businessContext);
+        contextField.dispatchEvent(new Event('input', { bubbles: true }));
+        console.log("✅ Successfully set business_context:", businessContext);
+    } else {
+        console.error("❌ Hidden field for business_context not found! Retrying...");
         setTimeout(setFieldValues, 500); // Retry after 500ms
     }
 }
